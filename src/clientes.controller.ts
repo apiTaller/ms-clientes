@@ -5,6 +5,7 @@ import { ClientesService } from './clientes.services';
 export class ClientesController {
   constructor(private readonly clientesService: ClientesService) {}
 
+  @Get() // <-- Aquí faltaba el decorador Get
   obtenerClientes() {
     return this.clientesService.obtenerTodos();
   }
@@ -29,5 +30,3 @@ export class ClientesController {
     return this.clientesService.eliminar(Number(id));
   }
 }
-
-Get()(ClientesController.prototype, 'obtenerClientes', Object.getOwnPropertyDescriptor(ClientesController.prototype, 'obtenerClientes')!);

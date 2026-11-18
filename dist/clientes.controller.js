@@ -37,6 +37,12 @@ let ClientesController = class ClientesController {
 };
 exports.ClientesController = ClientesController;
 __decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], ClientesController.prototype, "obtenerClientes", null);
+__decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -69,5 +75,4 @@ exports.ClientesController = ClientesController = __decorate([
     (0, common_1.Controller)('clientes'),
     __metadata("design:paramtypes", [clientes_services_1.ClientesService])
 ], ClientesController);
-(0, common_1.Get)()(ClientesController.prototype, 'obtenerClientes', Object.getOwnPropertyDescriptor(ClientesController.prototype, 'obtenerClientes'));
 //# sourceMappingURL=clientes.controller.js.map
