@@ -19,12 +19,12 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             typeorm_1.TypeOrmModule.forRoot({
-                type: 'mysql',
+                type: 'postgres',
                 host: 'localhost',
-                port: 3306,
-                username: 'root',
-                password: '',
-                database: 'api_restaurante_clientes',
+                port: 5432,
+                username: 'postgres',
+                password: 'pwdclientesdb',
+                database: 'clientesdb',
                 entities: [cliente_entity_1.Cliente],
                 synchronize: true,
             }),
