@@ -5,48 +5,54 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClientesService = void 0;
 const common_1 = require("@nestjs/common");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
+const cliente_entity_1 = require("./entities/cliente.entity");
 let ClientesService = class ClientesService {
-    constructor() {
-        this.clientes = [
-            { id: 1, nombre: 'Restaurante El Buen Sabor', direccion: 'Calle Mayor 12', localidad: 'Madrid', provincia: 'Madrid' },
-            { id: 2, nombre: 'Cafetería Central', direccion: 'Plaza España 5', localidad: 'Toledo', provincia: 'Toledo' },
-        ];
+    constructor(clienteRepository) {
+        this.clienteRepository = clienteRepository;
     }
     obtenerTodos() {
-        return this.clientes;
+        return this.clienteRepository.find();
     }
-    obtenerPorId(id) {
-        const cliente = this.clientes.find(c => c.id === id);
+    async obtenerPorId(id) {
+        const cliente = await this.clienteRepository.findOne({ where: { id } });
         if (!cliente) {
             throw new common_1.NotFoundException(`Cliente con ID ${id} no encontrado`);
         }
         return cliente;
     }
-    crear(nuevoCliente) {
-        const id = this.clientes.length > 0 ? this.clientes[this.clientes.length - 1].id + 1 : 1;
-        const clienteConId = { id, ...nuevoCliente };
-        this.clientes.push(clienteConId);
-        return clienteConId;
+    async crear(nuevoCliente) {
+        const entidad = this.clienteRepository.create(nuevoCliente);
+        return this.clienteRepository.save(entidad);
     }
-    actualizar(id, datosActualizados) {
-        const cliente = this.obtenerPorId(id);
+    async actualizar(id, datosActualizados) {
+        const cliente = await this.obtenerPorId(id);
         Object.assign(cliente, datosActualizados);
-        return cliente;
+        return this.clienteRepository.save(cliente);
     }
-    eliminar(id) {
-        const index = this.clientes.findIndex(c => c.id === id);
-        if (index === -1) {
-            throw new common_1.NotFoundException(`Cliente con ID ${id} no encontrado`);
-        }
-        const eliminado = this.clientes.splice(index, 1);
-        return { mensaje: `Cliente con ID ${id} eliminado correctamente`, eliminado: eliminado[0] };
+    async eliminar(id) {
+        const cliente = await this.obtenerPorId(id);
+        const eliminado = await this.clienteRepository.remove(cliente);
+        return {
+            mensaje: `Cliente con ID ${id} eliminado correctamente`,
+            eliminado,
+        };
     }
 };
 exports.ClientesService = ClientesService;
 exports.ClientesService = ClientesService = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(cliente_entity_1.Cliente)),
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], ClientesService);
 //# sourceMappingURL=clientes.services.js.map

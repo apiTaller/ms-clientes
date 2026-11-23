@@ -1,46 +1,14 @@
+import { Repository } from 'typeorm';
+import { Cliente } from './entities/cliente.entity';
 export declare class ClientesService {
-    private clientes;
-    obtenerTodos(): {
-        id: number;
-        nombre: string;
-        direccion?: string;
-        localidad?: string;
-        provincia?: string;
-    }[];
-    obtenerPorId(id: number): {
-        id: number;
-        nombre: string;
-        direccion?: string;
-        localidad?: string;
-        provincia?: string;
-    };
-    crear(nuevoCliente: {
-        nombre: string;
-        direccion?: string;
-        localidad?: string;
-        provincia?: string;
-    }): {
-        nombre: string;
-        direccion?: string;
-        localidad?: string;
-        provincia?: string;
-        id: number;
-    };
-    actualizar(id: number, datosActualizados: any): {
-        id: number;
-        nombre: string;
-        direccion?: string;
-        localidad?: string;
-        provincia?: string;
-    };
-    eliminar(id: number): {
+    private readonly clienteRepository;
+    constructor(clienteRepository: Repository<Cliente>);
+    obtenerTodos(): Promise<Cliente[]>;
+    obtenerPorId(id: number): Promise<Cliente>;
+    crear(nuevoCliente: Partial<Cliente>): Promise<Cliente>;
+    actualizar(id: number, datosActualizados: Partial<Cliente>): Promise<Cliente>;
+    eliminar(id: number): Promise<{
         mensaje: string;
-        eliminado: {
-            id: number;
-            nombre: string;
-            direccion?: string;
-            localidad?: string;
-            provincia?: string;
-        };
-    };
+        eliminado: Cliente;
+    }>;
 }

@@ -1,43 +1,44 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Cliente } from './entities/cliente.entity';
 
 @Injectable()
 export class ClientesService {
-  private clientes: { id: number; nombre: string; direccion?: string; localidad?: string; provincia?: string }[] = [
-  { id: 1, nombre: 'Restaurante El Buen Sabor', direccion: 'Calle Mayor 12', localidad: 'Madrid', provincia: 'Madrid' },
-  { id: 2, nombre: 'Cafetería Central', direccion: 'Plaza España 5', localidad: 'Toledo', provincia: 'Toledo' },
-];
+  constructor(
+    @InjectRepository(Cliente)
+    private readonly clienteRepository: Repository<Cliente>,
+  ) {}
 
   obtenerTodos() {
-    return this.clientes;
+    return this.clienteRepository.find();
   }
 
-  obtenerPorId(id: number) {
-    const cliente = this.clientes.find(c => c.id === id);
+  async obtenerPorId(id: number) {
+    const cliente = await this.clienteRepository.findOne({ where: { id } });
     if (!cliente) {
       throw new NotFoundException(`Cliente con ID ${id} no encontrado`);
     }
     return cliente;
   }
 
-  crear(nuevoCliente: { nombre: string; direccion?: string; localidad?: string; provincia?: string }) {
-    const id = this.clientes.length > 0 ? this.clientes[this.clientes.length - 1].id + 1 : 1;
-    const clienteConId = { id, ...nuevoCliente };
-    this.clientes.push(clienteConId);
-    return clienteConId;
+  async crear(nuevoCliente: Partial<Cliente>) {
+    const entidad = this.clienteRepository.create(nuevoCliente);
+    return this.clienteRepository.save(entidad);
   }
 
-  actualizar(id: number, datosActualizados: any) {
-    const cliente = this.obtenerPorId(id);
+  async actualizar(id: number, datosActualizados: Partial<Cliente>) {
+    const cliente = await this.obtenerPorId(id);
     Object.assign(cliente, datosActualizados);
-    return cliente;
+    return this.clienteRepository.save(cliente);
   }
 
-  eliminar(id: number) {
-    const index = this.clientes.findIndex(c => c.id === id);
-    if (index === -1) {
-      throw new NotFoundException(`Cliente con ID ${id} no encontrado`);
-    }
-    const eliminado = this.clientes.splice(index, 1);
-    return { mensaje: `Cliente con ID ${id} eliminado correctamente`, eliminado: eliminado[0] };
+  async eliminar(id: number) {
+    const cliente = await this.obtenerPorId(id);
+    const eliminado = await this.clienteRepository.remove(cliente);
+    return {
+      mensaje: `Cliente con ID ${id} eliminado correctamente`,
+      eliminado,
+    };
   }
 }

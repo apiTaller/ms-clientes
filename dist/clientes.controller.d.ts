@@ -2,42 +2,12 @@ import { ClientesService } from './clientes.services';
 export declare class ClientesController {
     private readonly clientesService;
     constructor(clientesService: ClientesService);
-    obtenerClientes(): {
-        id: number;
-        nombre: string;
-        direccion?: string;
-        localidad?: string;
-        provincia?: string;
-    }[];
-    obtenerClientePorId(id: string): {
-        id: number;
-        nombre: string;
-        direccion?: string;
-        localidad?: string;
-        provincia?: string;
-    };
-    crearCliente(body: any): {
-        nombre: string;
-        direccion?: string;
-        localidad?: string;
-        provincia?: string;
-        id: number;
-    };
-    actualizarCliente(id: string, body: any): {
-        id: number;
-        nombre: string;
-        direccion?: string;
-        localidad?: string;
-        provincia?: string;
-    };
-    eliminarCliente(id: string): {
+    obtenerClientes(): Promise<import("./entities/cliente.entity").Cliente[]>;
+    obtenerClientePorId(id: string): Promise<import("./entities/cliente.entity").Cliente>;
+    crearCliente(body: any): Promise<import("./entities/cliente.entity").Cliente>;
+    actualizarCliente(id: string, body: any): Promise<import("./entities/cliente.entity").Cliente>;
+    eliminarCliente(id: string): Promise<{
         mensaje: string;
-        eliminado: {
-            id: number;
-            nombre: string;
-            direccion?: string;
-            localidad?: string;
-            provincia?: string;
-        };
-    };
+        eliminado: import("./entities/cliente.entity").Cliente;
+    }>;
 }
