@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('clientes')
 export class Cliente {
+  //username,correo,password,notas,valoraciones.
   @PrimaryGeneratedColumn()
   id!: number;
 
